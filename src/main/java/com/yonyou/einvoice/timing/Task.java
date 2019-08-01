@@ -25,5 +25,6 @@ public class Task {
   private void configureTasks(){
     logger.info("定时任务启动"+ LocalDateTime.now());
     datax.doTesk();
+    /////////////////////
   }
 }
