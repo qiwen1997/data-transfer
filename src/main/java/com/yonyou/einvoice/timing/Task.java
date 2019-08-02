@@ -1,7 +1,6 @@
 package com.yonyou.einvoice.timing;
 
 import com.yonyou.einvoice.service.Datax;
-import com.yonyou.einvoice.service.DataxImpl;
 import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Configuration
-@EnableScheduling
+//@EnableScheduling
 public class Task {
 
   private Logger logger= LoggerFactory.getLogger(Task.class);
@@ -21,10 +20,9 @@ public class Task {
   @Autowired
   private Datax datax;
 
-  @Scheduled(cron="${cron}")
-  private void configureTasks(){
-    logger.info("定时任务启动"+ LocalDateTime.now());
-    datax.doTesk();
-    System.out.println();
-  }
+//  @Scheduled(cron="${cron}")
+//  private void configureTasks(){
+//    logger.info("定时任务启动"+ LocalDateTime.now());
+//    datax.doTesk();
+//  }
 }
