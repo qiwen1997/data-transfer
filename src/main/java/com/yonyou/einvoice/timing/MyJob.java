@@ -21,11 +21,12 @@ public class MyJob implements Job {
 
   @Override
   public void execute(JobExecutionContext context) throws JobExecutionException {
-    log.info("任务执行：" + LocalDateTime.now());
-    String ID=jsonUtil.getMaxID();
-    jsonUtil.setMaxID(ID);
-    datax.doIncrementTest();
+    log.info("任务开始：" + LocalDateTime.now());
+    String OldID=jsonUtil.getMaxID();
     datax.doMaxIDFile();
+    String NewId=jsonUtil.getMaxID();
+    jsonUtil.setMaxID(OldID,NewId);
+    datax.doIncrementTest();
     log.info("任务结束："+LocalDateTime.now());
   }
 }

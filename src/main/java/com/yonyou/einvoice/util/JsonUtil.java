@@ -61,9 +61,10 @@ public class JsonUtil {
 
   /**
    * 把增量文件中的where改为>ID
-   * @param ID
+   * @param OldID
+   * @param NewID
    */
-  public void setMaxID(String ID){
+  public void setMaxID(String OldID,String NewID){
     Path path= Paths.get(incrementJsonPath);
     StringBuffer stringBuffer=new StringBuffer();
     try {
@@ -81,7 +82,7 @@ public class JsonUtil {
     JSONArray content=job.getJSONArray("content");
     JSONObject reader=content.getJSONObject(0).getJSONObject("reader");
     JSONObject parameter=reader.getJSONObject("parameter");
-    parameter.put("where","ID>"+ID+"");
+    parameter.put("where","ID>"+OldID+" and ID<="+NewID);
 
     reader.put("parameter",parameter);
     content.getJSONObject(0).put("reader",reader);

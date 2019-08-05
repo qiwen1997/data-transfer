@@ -51,10 +51,11 @@ public class Interface implements CommandLineRunner {
       if(jsonUtil.getMaxTimeFile()==null){
         log.info("目录中无最大ID记录文件，请先进行一次全量，或部署以max_ID为开头的文件，内容为最大ID");
       }else{
-        String ID=jsonUtil.getMaxID();
-        jsonUtil.setMaxID(ID);
-        datax.doIncrementTest();
+        String OldID=jsonUtil.getMaxID();
         datax.doMaxIDFile();
+        String NewId=jsonUtil.getMaxID();
+        jsonUtil.setMaxID(OldID,NewId);
+        datax.doIncrementTest();
       }
       anInterface.run();
     }else if(optionEnum.TIMING_INCREMENT.getKey().equals(option)){
