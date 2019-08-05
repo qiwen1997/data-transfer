@@ -2,6 +2,7 @@ package com.yonyou.einvoice.timing;
 import java.util.Date;
 
 import javax.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
 import org.quartz.JobBuilder;
@@ -11,7 +12,6 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Configuration;
  *
  */
 @Configuration
+@Slf4j
 public class QuartzManager {
   // 任务调度
   @Resource
@@ -34,6 +35,7 @@ public class QuartzManager {
    * @throws SchedulerException
    */
   public void startJob() throws SchedulerException {
+    log.info("开始执行所有任务");
     startJob1(scheduler);
     scheduler.start();
   }
@@ -47,6 +49,7 @@ public class QuartzManager {
    * @throws SchedulerException
    */
   public String getJobInfo(String name, String group) throws SchedulerException {
+    log.info("获得Job信息,Job的name:"+name+" group:"+group);
     TriggerKey triggerKey = new TriggerKey(name, group);
     CronTrigger cronTrigger = (CronTrigger) scheduler.getTrigger(triggerKey);
     return String.format("time:%s,state:%s", cronTrigger.getCronExpression(),
@@ -63,6 +66,7 @@ public class QuartzManager {
    * @throws SchedulerException
    */
   public boolean modifyJob(String name, String group, String time) throws SchedulerException {
+    log.info("修改某个任务的执行时间 name:"+name+" group:"+group+" cron:"+time);
     Date date = null;
     TriggerKey triggerKey = new TriggerKey(name, group);
     CronTrigger cronTrigger = (CronTrigger) scheduler.getTrigger(triggerKey);
@@ -82,6 +86,7 @@ public class QuartzManager {
    * @throws SchedulerException
    */
   public void pauseAllJob() throws SchedulerException {
+    log.info("暂停所有任务");
     scheduler.pauseAll();
   }
 
@@ -93,10 +98,12 @@ public class QuartzManager {
    * @throws SchedulerException
    */
   public void pauseJob(String name, String group) throws SchedulerException {
+    log.info("暂停某个任务 name:"+name+" group:"+group);
     JobKey jobKey = new JobKey(name, group);
     JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-    if (jobDetail == null)
+    if (jobDetail == null) {
       return;
+    }
     scheduler.pauseJob(jobKey);
   }
 
@@ -106,6 +113,7 @@ public class QuartzManager {
    * @throws SchedulerException
    */
   public void resumeAllJob() throws SchedulerException {
+    log.info("恢复所有任务");
     scheduler.resumeAll();
   }
 
@@ -117,10 +125,12 @@ public class QuartzManager {
    * @throws SchedulerException
    */
   public void resumeJob(String name, String group) throws SchedulerException {
+    log.info("恢复某个任务 name:"+name+" group:"+group);
     JobKey jobKey = new JobKey(name, group);
     JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-    if (jobDetail == null)
+    if (jobDetail == null) {
       return;
+    }
     scheduler.resumeJob(jobKey);
   }
 
@@ -132,10 +142,12 @@ public class QuartzManager {
    * @throws SchedulerException
    */
   public void deleteJob(String name, String group) throws SchedulerException {
+    log.info("删除某个任务 name:"+name+" group:"+group);
     JobKey jobKey = new JobKey(name, group);
     JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-    if (jobDetail == null)
+    if (jobDetail == null) {
       return;
+    }
     scheduler.deleteJob(jobKey);
   }
 
