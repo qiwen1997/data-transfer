@@ -2,11 +2,13 @@ package com.yonyou.einvoice.execute;
 
 import com.yonyou.einvoice.entity.optionEnum;
 import com.yonyou.einvoice.service.Datax;
+import com.yonyou.einvoice.timing.MyJob;
+import com.yonyou.einvoice.timing.QuartzManager;
 import com.yonyou.einvoice.util.JsonUtil;
 import java.util.Scanner;
 import lombok.extern.slf4j.Slf4j;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +25,13 @@ public class Interface implements CommandLineRunner {
   @Autowired
   private Datax datax;
 
+  @Autowired
+  private QuartzManager quartzManager;
+
+  @Value("${cron}")
+  private String cron;
+
+
   @Override
   public void run(String... args) throws Exception {
     Scanner scanner=new Scanner(System.in);
@@ -33,7 +42,8 @@ public class Interface implements CommandLineRunner {
     Integer option=scanner.nextInt();
     if(optionEnum.ONE_FUll.getKey().equals(option)){
       log.info("进行一次全量");
-      datax.doFullTesk();
+      jsonUtil.setFull();
+      datax.doIncrementTest();
       datax.doMaxIDFile();
       anInterface.run();
     }else if (optionEnum.ONE_INCREMENT.getKey().equals(option)){
@@ -50,7 +60,7 @@ public class Interface implements CommandLineRunner {
     }else if(optionEnum.TIMING_INCREMENT.getKey().equals(option)){
       System.out.println("进行定时增量");
 
-
+      quartzManager.startJob();
     }else if(optionEnum.EXIT.getKey().equals(option)){
       log.info("退出");
       return;

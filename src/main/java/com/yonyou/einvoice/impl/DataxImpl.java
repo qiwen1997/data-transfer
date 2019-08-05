@@ -23,9 +23,6 @@ public class DataxImpl implements Datax {
   @Value("${dataxPath}")
   private String dataxpath;
 
-  @Value("${fullJsonPath}")
-  private String fullJsonPath;
-
   @Value("${incrementJsonPath}")
   private String incrementJsonPath;
 
@@ -45,24 +42,24 @@ public class DataxImpl implements Datax {
   /**
    * 进行全量
    */
-  @Override
-  public void doFullTesk() {
-
-    File f=new File(fullJsonPath);
-    String cmd = pythonPath + " " + dataxpath + " " + f.getAbsolutePath();
-    try {
-      Process process = Runtime.getRuntime().exec(cmd);
-      BufferedReader in = new BufferedReader(
-          new InputStreamReader(process.getInputStream(), "UTF-8"));
-      String line = null;
-      while ((line = in.readLine()) != null) {
-        logger.info(line);
-      }
-    } catch (IOException e) {
-      logger.error(e.getMessage());
-    }
-
-  }
+//  @Override
+//  public void doFullTesk() {
+//
+//    File f=new File(fullJsonPath);
+//    String cmd = pythonPath + " " + dataxpath + " " + f.getAbsolutePath();
+//    try {
+//      Process process = Runtime.getRuntime().exec(cmd);
+//      BufferedReader in = new BufferedReader(
+//          new InputStreamReader(process.getInputStream(), "UTF-8"));
+//      String line = null;
+//      while ((line = in.readLine()) != null) {
+//        logger.info(line);
+//      }
+//    } catch (IOException e) {
+//      logger.error(e.getMessage());
+//    }
+//
+//  }
 
   /**
    * 获得最大ID，写入文件

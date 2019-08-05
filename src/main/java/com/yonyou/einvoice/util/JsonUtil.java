@@ -94,4 +94,40 @@ public class JsonUtil {
       log.error(e.getMessage());
     }
   }
+
+  /**
+   * 把增量文件中的where改为1=1
+   * 使其变为全量
+   */
+  public void setFull(){
+    Path path= Paths.get(incrementJsonPath);
+    StringBuffer stringBuffer=new StringBuffer();
+    try {
+      BufferedReader bufferedReader=Files.newBufferedReader(path);
+      String line=null;
+      while((line=bufferedReader.readLine())!=null){
+        stringBuffer.append(line);
+      }
+      bufferedReader.close();
+    } catch (IOException e) {
+      log.error(e.getMessage());
+    }
+    JSONObject jsonObject=JSONObject.parseObject(stringBuffer.toString());
+    JSONObject job=jsonObject.getJSONObject("job");
+    JSONArray content=job.getJSONArray("content");
+    JSONObject reader=content.getJSONObject(0).getJSONObject("reader");
+    JSONObject parameter=reader.getJSONObject("parameter");
+    parameter.put("where","1=1");
+
+    reader.put("parameter",parameter);
+    content.getJSONObject(0).put("reader",reader);
+    job.put("content",content);
+    jsonObject.put("job",job);
+    //System.out.println(jsonObject.toString());
+    try {
+      Files.write(path,jsonObject.toJSONString().getBytes());
+    } catch (IOException e) {
+      log.error(e.getMessage());
+    }
+  }
 }

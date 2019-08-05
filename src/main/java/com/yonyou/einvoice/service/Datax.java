@@ -9,7 +9,7 @@ public interface Datax {
   /**
    * 进行全量
    */
-  void doFullTesk();
+  //void doFullTesk();
 
   /**
    * 查找最大ID，写入文件
