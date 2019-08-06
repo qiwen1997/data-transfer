@@ -12,6 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+/**
+ * datax相关操作
+ *
+ * @author qiwen
+ */
 @Service
 public class DataxImpl implements Datax {
 
@@ -32,41 +37,12 @@ public class DataxImpl implements Datax {
   @Value("${pythonPath}")
   private String pythonPath;
 
-//  @Override
-//  public File[] getFileList() {
-//    File file = new File(jsonPath);
-//    File[] files = file.listFiles((File f) -> f.getName().endsWith(".json"));
-//    return files;
-//  }
-
-  /**
-   * 进行全量
-   */
-//  @Override
-//  public void doFullTesk() {
-//
-//    File f=new File(fullJsonPath);
-//    String cmd = pythonPath + " " + dataxpath + " " + f.getAbsolutePath();
-//    try {
-//      Process process = Runtime.getRuntime().exec(cmd);
-//      BufferedReader in = new BufferedReader(
-//          new InputStreamReader(process.getInputStream(), "UTF-8"));
-//      String line = null;
-//      while ((line = in.readLine()) != null) {
-//        logger.info(line);
-//      }
-//    } catch (IOException e) {
-//      logger.error(e.getMessage());
-//    }
-//
-//  }
-
   /**
    * 获得最大ID，写入文件
    */
   @Override
   public void doMaxIDFile() {
-    File f=new File(fileJsonPath);
+    File f = new File(fileJsonPath);
     String cmd = pythonPath + " " + dataxpath + " " + f.getAbsolutePath();
     try {
       Process process = Runtime.getRuntime().exec(cmd);
@@ -81,9 +57,12 @@ public class DataxImpl implements Datax {
     }
   }
 
+  /**
+   * 进行增量
+   */
   @Override
-  public void doIncrementTest() {
-    File f=new File(incrementJsonPath);
+  public void doIncrementFile() {
+    File f = new File(incrementJsonPath);
     String cmd = pythonPath + " " + dataxpath + " " + f.getAbsolutePath();
     try {
       Process process = Runtime.getRuntime().exec(cmd);

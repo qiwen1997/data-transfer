@@ -10,6 +10,11 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * 定时任务具体任务
+ *
+ * @author qiwen
+ */
 @Slf4j
 public class MyJob implements Job {
 
@@ -21,12 +26,13 @@ public class MyJob implements Job {
 
   @Override
   public void execute(JobExecutionContext context) throws JobExecutionException {
-    log.info("任务开始：" + LocalDateTime.now());
-    String OldID=jsonUtil.getMaxID();
+    log.info("任务开始：" + LocalDateTime.now() + " name:" + context.getJobDetail().getKey().getName() +
+        " group:" + context.getJobDetail().getKey().getGroup());
+    String OldID = jsonUtil.getMaxID();
     datax.doMaxIDFile();
-    String NewId=jsonUtil.getMaxID();
-    jsonUtil.setMaxID(OldID,NewId);
-    datax.doIncrementTest();
-    log.info("任务结束："+LocalDateTime.now());
+    String NewId = jsonUtil.getMaxID();
+    jsonUtil.setMaxID(OldID, NewId);
+    datax.doIncrementFile();
+    log.info("任务结束：" + LocalDateTime.now());
   }
 }

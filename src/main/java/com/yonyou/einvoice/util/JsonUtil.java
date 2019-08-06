@@ -12,6 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+/**
+ * JSON文件操作类
+ *
+ * @author qiwen
+ */
 @Slf4j
 @Component
 public class JsonUtil {
@@ -24,13 +29,12 @@ public class JsonUtil {
 
   /**
    * 找到记录最大时间的文件
-   * @return
    */
-  public File getMaxTimeFile(){
+  public File getMaxTimeFile() {
     File file = new File(maxTimeFilePath);
-    File[] files=file.listFiles();
-    for(int i=0;i<files.length;i++){
-      if(files[i].getName().startsWith("max_ID")){
+    File[] files = file.listFiles();
+    for (int i = 0; i < files.length; i++) {
+      if (files[i].getName().startsWith("max_ID")) {
         return files[i];
       }
     }
@@ -39,18 +43,17 @@ public class JsonUtil {
 
   /**
    * 获得文件中的最大ID
-   * @return
    */
-  public String getMaxID(){
-    File file=getMaxTimeFile();
-    String id=null;
-    if(file==null){
+  public String getMaxID() {
+    File file = getMaxTimeFile();
+    String id = null;
+    if (file == null) {
       return null;
-    }else{
-      Path path=file.toPath();
+    } else {
+      Path path = file.toPath();
       try {
-        BufferedReader bufferedReader=Files.newBufferedReader(path);
-        id=bufferedReader.readLine();
+        BufferedReader bufferedReader = Files.newBufferedReader(path);
+        id = bufferedReader.readLine();
         bufferedReader.close();
       } catch (IOException e) {
         log.error(e.getMessage());
@@ -61,72 +64,69 @@ public class JsonUtil {
 
   /**
    * 把增量文件中的where改为>ID
-   * @param OldID
-   * @param NewID
    */
-  public void setMaxID(String OldID,String NewID){
-    Path path= Paths.get(incrementJsonPath);
-    StringBuffer stringBuffer=new StringBuffer();
+  public void setMaxID(String OldID, String NewID) {
+    Path path = Paths.get(incrementJsonPath);
+    StringBuffer stringBuffer = new StringBuffer();
     try {
-      BufferedReader bufferedReader=Files.newBufferedReader(path);
-      String line=null;
-      while((line=bufferedReader.readLine())!=null){
+      BufferedReader bufferedReader = Files.newBufferedReader(path);
+      String line = null;
+      while ((line = bufferedReader.readLine()) != null) {
         stringBuffer.append(line);
       }
       bufferedReader.close();
     } catch (IOException e) {
       log.error(e.getMessage());
     }
-    JSONObject jsonObject=JSONObject.parseObject(stringBuffer.toString());
-    JSONObject job=jsonObject.getJSONObject("job");
-    JSONArray content=job.getJSONArray("content");
-    JSONObject reader=content.getJSONObject(0).getJSONObject("reader");
-    JSONObject parameter=reader.getJSONObject("parameter");
-    parameter.put("where","ID>"+OldID+" and ID<="+NewID);
+    JSONObject jsonObject = JSONObject.parseObject(stringBuffer.toString());
+    JSONObject job = jsonObject.getJSONObject("job");
+    JSONArray content = job.getJSONArray("content");
+    JSONObject reader = content.getJSONObject(0).getJSONObject("reader");
+    JSONObject parameter = reader.getJSONObject("parameter");
+    parameter.put("where", "ID>" + OldID + " and ID<=" + NewID);
 
-    reader.put("parameter",parameter);
-    content.getJSONObject(0).put("reader",reader);
-    job.put("content",content);
-    jsonObject.put("job",job);
+    reader.put("parameter", parameter);
+    content.getJSONObject(0).put("reader", reader);
+    job.put("content", content);
+    jsonObject.put("job", job);
     //System.out.println(jsonObject.toString());
     try {
-      Files.write(path,jsonObject.toJSONString().getBytes());
+      Files.write(path, jsonObject.toJSONString().getBytes());
     } catch (IOException e) {
       log.error(e.getMessage());
     }
   }
 
   /**
-   * 把增量文件中的where改为1=1
-   * 使其变为全量
+   * 把增量文件中的where改为1=1 使其变为全量
    */
-  public void setFull(){
-    Path path= Paths.get(incrementJsonPath);
-    StringBuffer stringBuffer=new StringBuffer();
+  public void setFull() {
+    Path path = Paths.get(incrementJsonPath);
+    StringBuffer stringBuffer = new StringBuffer();
     try {
-      BufferedReader bufferedReader=Files.newBufferedReader(path);
-      String line=null;
-      while((line=bufferedReader.readLine())!=null){
+      BufferedReader bufferedReader = Files.newBufferedReader(path);
+      String line = null;
+      while ((line = bufferedReader.readLine()) != null) {
         stringBuffer.append(line);
       }
       bufferedReader.close();
     } catch (IOException e) {
       log.error(e.getMessage());
     }
-    JSONObject jsonObject=JSONObject.parseObject(stringBuffer.toString());
-    JSONObject job=jsonObject.getJSONObject("job");
-    JSONArray content=job.getJSONArray("content");
-    JSONObject reader=content.getJSONObject(0).getJSONObject("reader");
-    JSONObject parameter=reader.getJSONObject("parameter");
-    parameter.put("where","1=1");
+    JSONObject jsonObject = JSONObject.parseObject(stringBuffer.toString());
+    JSONObject job = jsonObject.getJSONObject("job");
+    JSONArray content = job.getJSONArray("content");
+    JSONObject reader = content.getJSONObject(0).getJSONObject("reader");
+    JSONObject parameter = reader.getJSONObject("parameter");
+    parameter.put("where", "1=1");
 
-    reader.put("parameter",parameter);
-    content.getJSONObject(0).put("reader",reader);
-    job.put("content",content);
-    jsonObject.put("job",job);
+    reader.put("parameter", parameter);
+    content.getJSONObject(0).put("reader", reader);
+    job.put("content", content);
+    jsonObject.put("job", job);
     //System.out.println(jsonObject.toString());
     try {
-      Files.write(path,jsonObject.toJSONString().getBytes());
+      Files.write(path, jsonObject.toJSONString().getBytes());
     } catch (IOException e) {
       log.error(e.getMessage());
     }
