@@ -46,9 +46,9 @@ public class Interface implements CommandLineRunner {
     Integer option = scanner.nextInt();
     if (optionEnum.ONE_FUll.getKey().equals(option)) {
       log.info("进行一次全量");
+      datax.doMaxIDFile();
       jsonUtil.setFull();
       datax.doIncrementFile();
-      datax.doMaxIDFile();
       anInterface.run();
     } else if (optionEnum.ONE_INCREMENT.getKey().equals(option)) {
       log.info("进行一次增量");
