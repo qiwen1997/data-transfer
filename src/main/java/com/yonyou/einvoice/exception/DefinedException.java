@@ -5,7 +5,7 @@ package com.yonyou.einvoice.exception;
  *
  * @author qiwen
  */
-public class SbException extends RuntimeException {
+public class DefinedException extends RuntimeException {
 
 
   private static final long serialVersionUID = 1L;
@@ -20,7 +20,7 @@ public class SbException extends RuntimeException {
 
   private Integer code;
 
-  public SbException(Integer code, String message) {
+  public DefinedException(Integer code, String message) {
     super(message);
     this.code = code;
   }

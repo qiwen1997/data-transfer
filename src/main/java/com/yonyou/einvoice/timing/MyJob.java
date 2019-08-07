@@ -1,6 +1,7 @@
 package com.yonyou.einvoice.timing;
 
 
+import com.yonyou.einvoice.execute.DoWork;
 import com.yonyou.einvoice.service.Datax;
 import com.yonyou.einvoice.util.JsonUtil;
 import java.time.LocalDateTime;
@@ -19,20 +20,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class MyJob implements Job {
 
   @Autowired
-  private JsonUtil jsonUtil;
-
-  @Autowired
-  private Datax datax;
+  private DoWork doWork;
 
   @Override
   public void execute(JobExecutionContext context) throws JobExecutionException {
     log.info("任务开始：" + LocalDateTime.now() + " name:" + context.getJobDetail().getKey().getName() +
         " group:" + context.getJobDetail().getKey().getGroup());
-    String OldID = jsonUtil.getMaxID();
-    datax.doMaxIDFile();
-    String NewId = jsonUtil.getMaxID();
-    jsonUtil.setMaxID(OldID, NewId);
-    datax.doIncrementFile();
+    doWork.doIncrement();
     log.info("任务结束：" + LocalDateTime.now());
   }
 }

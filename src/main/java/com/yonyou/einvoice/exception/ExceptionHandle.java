@@ -18,8 +18,8 @@ public class ExceptionHandle {
 
   @ExceptionHandler(value = Exception.class)
   public ReturnMessage<Object> handle(Exception exception) {
-    if (exception instanceof SbException) {
-      SbException sbexception = (SbException) exception;
+    if (exception instanceof DefinedException) {
+      DefinedException sbexception = (DefinedException) exception;
       return ReturnMessageUtil.error(sbexception.getCode(), sbexception.getMessage());
     } else {
       logger.error("系统异常 {}", exception);

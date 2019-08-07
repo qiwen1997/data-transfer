@@ -21,19 +21,16 @@ import org.springframework.stereotype.Component;
 public class Interface implements CommandLineRunner {
 
   @Autowired
+  private DoWork doWork;
+
+  @Autowired
   private Interface anInterface;
 
   @Autowired
   private JsonUtil jsonUtil;
 
   @Autowired
-  private Datax datax;
-
-  @Autowired
   private QuartzManager quartzManager;
-
-  @Value("${cron}")
-  private String cron;
 
 
   @Override
@@ -46,20 +43,14 @@ public class Interface implements CommandLineRunner {
     Integer option = scanner.nextInt();
     if (optionEnum.ONE_FUll.getKey().equals(option)) {
       log.info("进行一次全量");
-      datax.doMaxIDFile();
-      jsonUtil.setFull();
-      datax.doIncrementFile();
+      doWork.doFull();
       anInterface.run();
     } else if (optionEnum.ONE_INCREMENT.getKey().equals(option)) {
       log.info("进行一次增量");
       if (jsonUtil.getMaxTimeFile() == null) {
         log.info("目录中无最大ID记录文件，请先进行一次全量，或部署以max_ID为开头的文件，内容为最大ID");
       } else {
-        String OldID = jsonUtil.getMaxID();
-        datax.doMaxIDFile();
-        String NewId = jsonUtil.getMaxID();
-        jsonUtil.setMaxID(OldID, NewId);
-        datax.doIncrementFile();
+        doWork.doIncrement();
       }
       anInterface.run();
     } else if (optionEnum.TIMING_INCREMENT.getKey().equals(option)) {

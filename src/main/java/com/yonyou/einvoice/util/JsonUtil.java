@@ -48,7 +48,8 @@ public class JsonUtil {
     File file = getMaxTimeFile();
     String id = null;
     if (file == null) {
-      return null;
+      log.info("没有找到max_ID文件，返回数字0");
+      return "0";
     } else {
       Path path = file.toPath();
       try {

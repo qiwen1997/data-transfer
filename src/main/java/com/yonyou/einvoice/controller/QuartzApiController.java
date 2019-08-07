@@ -1,6 +1,7 @@
 package com.yonyou.einvoice.controller;
 
 import com.yonyou.einvoice.exception.ReturnMessageUtil;
+import com.yonyou.einvoice.execute.DoWork;
 import com.yonyou.einvoice.timing.QuartzManager;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.SchedulerException;
@@ -19,6 +20,8 @@ public class QuartzApiController {
   @Autowired
   private QuartzManager quartzManager;
 
+  @Autowired
+  private DoWork doWork;
 
   @GetMapping("/start")
   public String startQuartzJob() {
@@ -112,5 +115,16 @@ public class QuartzApiController {
     return ReturnMessageUtil.sucess().toJSON();
   }
 
+  @GetMapping(value = "/full")
+  public String fullJob(String name, String group) {
+    try {
+      quartzManager.pauseAllJob();
+      doWork.doFull();
+      quartzManager.resumeAllJob();
+    } catch (SchedulerException e) {
+      log.error("full 全量任务出现异常 {}", e.getMessage());
+    }
+    return ReturnMessageUtil.sucess().toJSON();
+  }
 }
 
